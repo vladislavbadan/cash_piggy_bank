@@ -29,6 +29,8 @@ go mod download
 ```bash
 go run cmd/main.go
 ```
+## Демонстрация
+https://t.me/Cash_piggy_bank_bot
 
 ## Структура проекта
 
