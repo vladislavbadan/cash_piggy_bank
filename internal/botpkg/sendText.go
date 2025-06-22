@@ -2,6 +2,7 @@ package botpkg
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/mymmrac/telego"
@@ -14,18 +15,25 @@ func SendText(bot *telego.Bot, ctx *th.Context, message telego.Message, textMess
 	case "нотификация":
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
-		_, _ = bot.SendMessage(ctx,
+		_, err := bot.SendMessage(ctx,
 			tu.Message(
 				tu.ID(ChatId),
 				textMessage,
 			),
 		)
+		if err != nil {
+			log.Println(err)
+		}
 
 	default:
-		_, _ = bot.SendMessage(ctx, &telego.SendMessageParams{
+		_, err := bot.SendMessage(ctx, &telego.SendMessageParams{
 			ChatID:    message.Chat.ChatID(),
 			Text:      textMessage,
 			ParseMode: telego.ModeHTML,
 		})
+		if err != nil {
+			log.Println(err)
+		}
 	}
+
 }

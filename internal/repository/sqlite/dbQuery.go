@@ -122,12 +122,11 @@ func updateGoalAmount(db *sql.DB, bot *telego.Bot, ctx *th.Context, message tele
 	}
 
 	// Обновляем сумму
-	newAmount := currentAmount + addAmount
 	_, err = db.Exec(`
         UPDATE savings 
         SET amount = ? 
         WHERE id = ? AND user_id = ?`, // Важно: обновляем ТОЛЬКО если user_id совпадает
-		newAmount, goalID, userID,
+		addAmount, goalID, userID,
 	)
 
 	if int((currentAmount+addAmount)/targetAmount*100) >= 100 && complete == 0 {
@@ -264,7 +263,10 @@ func DbQuery(command string, bot *telego.Bot, ctx *th.Context, message telego.Me
 				if err != nil {
 					log.Println("Ошибка:", err)
 				} else {
-					botpkg.SendText(bot, ctx, message, "Твоя цель добавлена 😉", "", 0)
+					fmt.Println("должны отправить сообщение")
+					botpkg.SendText(bot, ctx, message, fmt.Sprintf(`<b>Я запомнил твою цель %s✅</b>
+
+<b><i>В будущем обновляй свою цель и записывай накопления — я подскажу, сколько осталось накопить до достижения цели.</i></b>`, arrString[0]), "", 0)
 				}
 			}
 
@@ -295,7 +297,11 @@ func DbQuery(command string, bot *telego.Bot, ctx *th.Context, message telego.Me
 		if UserMap[message.Chat.ID].Command == "Ждем название цели" {
 
 			UserMap[message.Chat.ID].DbChangeTargetId = UserMap[message.Chat.ID].TargetMap[command]
-			botpkg.SendText(bot, ctx, message, fmt.Sprintf("<b>✅Я запомнил, что мы будем обновлять %s</b>\nПришли мне сумму, которую добавил к накоплениям.\nНапример, 5000", command), "", 0)
+			botpkg.SendText(bot, ctx, message, fmt.Sprintf(`Давай обновим твою цель 💪🏻
+
+<b>Напиши в ответ сумму, которую ты уже накопил на свою цель %s.</b>
+
+Например, 500`, command), "", 0)
 
 			UserMap[message.Chat.ID].Command = "Ждем сумму для цели"
 		} else if UserMap[message.Chat.ID].Command == "Ждем сумму для цели" {
