@@ -263,7 +263,6 @@ func DbQuery(command string, bot *telego.Bot, ctx *th.Context, message telego.Me
 				if err != nil {
 					log.Println("Ошибка:", err)
 				} else {
-					fmt.Println("должны отправить сообщение")
 					botpkg.SendText(bot, ctx, message, fmt.Sprintf(`<b>Я запомнил твою цель %s✅</b>
 
 <b><i>В будущем обновляй свою цель и записывай накопления — я подскажу, сколько осталось накопить до достижения цели.</i></b>`, arrString[0]), "", 0)
